@@ -51,12 +51,13 @@
         <input type="submit" value="Create List" />
       </form>
       <div id="error" class="hidden">Something went wrong!</div>   
-
-
+      <br>
+      <br>
+      <br>
       <ul id="lists">
         {% for list in lists %}
            <li>
-            <input class="check-completed" data-id="{{ list.id }}" type="checkbox" {% if list.completed %} checked {% endif %}>{{ list.name }}
+            <input class="check-completed" data-id="{{ list.id }}" type="checkbox" {% if list.completed %} checked {% endif %}>
              <a href="/lists/{{ list.id }}">{{ list.name }}</a> 
             <button class='delete-button' data-id="{{ list.id }}">&cross;</button>
             
