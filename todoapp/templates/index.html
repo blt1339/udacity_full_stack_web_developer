@@ -45,7 +45,7 @@
     
     <div class='lists-wrapper'>
       <h1>Todo Lists</h1>
-      <form id="form" method="post" action="/todolists/create">
+      <form id="lists-form" method="post" action="/todolists/create">
         <label for="list-create">Create List:</label>
         <input id="list-create" type="text" id="description" name="description" />
         <input type="submit" value="Create List" />
@@ -68,7 +68,7 @@
 
     <div class='todos-wrapper'>
       <h1>Todo Items</h1>
-      <form id="form" method="post" action="/todos/create">
+      <form id="todo-form" method="post" action="/todos/create">
        
         <label for="todo-create">Create Todo</label>
         <input id="todo-create" type="text" id="description" name="description" />
@@ -130,9 +130,10 @@
 
 
       const descInput = document.getElementById('description');
-      document.getElementById('form').onsubmit = function(e) {
+      document.getElementById('todo-form').onsubmit = function(e) {
         e.preventDefault();
         const desc = descInput.value;
+        console.log(desc);
         descInput.value = '';
         fetch('/todos/create', {
           method: 'POST',
