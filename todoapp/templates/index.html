@@ -45,12 +45,12 @@
     
     <div class='lists-wrapper'>
       <h1>Todo Lists</h1>
-      <form id="lists-form" method="post" action="/todolists/create">
-        <label for="list-create">Create List:</label>
-        <input id="list-create" type="text" id="description" name="description" />
+      <form id="list-form" method="post" action="/todolists/create">
+        <label for="todolist">Create List:</label>
+        <input id="todolist-input" type="text" name="todolist" />
         <input type="submit" value="Create List" />
       </form>
-      <div id="error" class="hidden">Something went wrong!</div>   
+      <div id="list-error" class="hidden">Something went wrong!</div>   
 
 
       <ul id="lists">
@@ -69,12 +69,12 @@
     <div class='todos-wrapper'>
       <h1>Todo Items</h1>
       <form id="todo-form" method="post" action="/todos/create">
-       
-        <label for="todo-create">Create Todo</label>
-        <input id="todo-create" type="text" id="description" name="description" />
+        <input id="list_id" type="hidden" value="{{ active_list.id }}">
+        <label for="description">Create Todo</label>
+        <input id="description" type="text" name="description" />
         <input type="submit" value="Create Todo" />
       </form>
-      <div id="error" class="hidden">Something went wrong!</div>   
+      <div id="todo-error" class="hidden">Something went wrong!</div>   
       <h2>{{ active_list.name }}</h2>
 
       <ul id="todos">
@@ -129,17 +129,14 @@
       }
 
 
-      const descInput = document.getElementById('description');
       document.getElementById('todo-form').onsubmit = function(e) {
         e.preventDefault();
-        const desc = descInput.value;
-        console.log(desc);
-        descInput.value = '';
         fetch('/todos/create', {
           method: 'POST',
           body: JSON.stringify({
-            'description': desc,
-          }),
+            'description': document.getElementById('description').value,
+            'list_id': document.getElementById('list_id').value
+        }),
           headers: {
             'Content-Type': 'application/json',
           }
@@ -150,12 +147,48 @@
           li = document.createElement('li');
           li.innerText = desc;
           document.getElementById('todos').appendChild(li);
-          document.getElementById('error').className = 'hidden';
+          document.getElementById('todo-error').className = 'hidden';
+          console.log(document.getElementById('todo-error').className)
         })
         .catch(function() {
-          document.getElementById('error').className = '';
+          document.getElementById('todo-error').className = '';
         })
       }
+
+      document.getElementById('list-form').onsubmit = function (e) {
+        e.preventDefault();
+
+        fetch('/lists/create', {
+            method: 'POST',
+            body: JSON.stringify({
+                'name': document.getElementById('todolist-input').value
+            }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (jsonResponse) {
+            const liItem = document.createElement('LI');
+            console.log(jsonResponse)
+            liItem.innerHTML = jsonResponse['name'];
+            document.getElementById('lists').appendChild(liItem);
+            document.getElementById('list-error').className = 'hidden';
+            window.location.reload(true);
+        })
+        .catch(function (err) {
+            document.getElementById('list-error').className = '';
+        })
+      }
+
+
+
+
+
+
+
     </script>
   </body>
 </html>

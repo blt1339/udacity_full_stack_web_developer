@@ -29,29 +29,28 @@ class TodoList(db.Model):
 
 db.create_all()
 
-@app.route('/todos/create',methods=['POST'])
+@app.route('/todos/create', methods=['POST'])
 def create_todo():
-    print('Hello World')
     error = False
     body = {}
     try:
         description = request.get_json()['description']
-        print('HERE')
-        print(description)
-        todo = Todo(description=description)
+        list_id = request.get_json()['list_id']
+        todo = Todo(description=description, completed=False, list_id=list_id)
         db.session.add(todo)
         db.session.commit()
+        body['id'] = todo.id
+        body['completed'] = todo.completed
         body['description'] = todo.description
-    except:
-        error=True
+        body['list_id'] = list_id
+    except():
         db.session.rollback()
-
+        error = True
         print(sys.exc_info())
     finally:
         db.session.close()
-
     if error:
-        abort (400)
+        abort(500)
     else:
         return jsonify(body)
 
@@ -82,10 +81,12 @@ def delete_todo(todo_id):
 
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
-    return render_template('index.html',
-    lists=TodoList.query.all(),
-    active_list=TodoList.query.get(list_id),
-    todos=Todo.query.filter_by(list_id=list_id).order_by('id').all())
+    lists = TodoList.query.all()
+    active_list = TodoList.query.get(list_id)
+    todos = Todo.query.filter_by(list_id=list_id).order_by('id').all()
+
+    return render_template('index.html', todos=todos, lists=lists, active_list=active_list)
+
 
 @app.route('/lists/<list_id>/set-completed', methods=['POST'])
 def set_completed_list(list_id):
