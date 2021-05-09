@@ -24,7 +24,6 @@ class TodoList(db.Model):
     __tablename__ = 'todolists'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(),nullable=False)
-    completed = db.Column(db.Boolean,nullable=False,default=False)
     todos = db.relationship('Todo', backref='list',lazy=True)
 
 
@@ -36,7 +35,8 @@ def create_todo():
     error = False
     body = {}
     try:
-        description = request.get_json()['description']        
+        description = request.get_json()['description']
+        print(description)
         todo = Todo(description=description)
         db.session.add(todo)
         db.session.commit()
