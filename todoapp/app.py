@@ -31,11 +31,12 @@ db.create_all()
 
 @app.route('/todos/create',methods=['POST'])
 def create_todo():
-
+    print('Hello World')
     error = False
     body = {}
     try:
         description = request.get_json()['description']
+        print('HERE')
         print(description)
         todo = Todo(description=description)
         db.session.add(todo)
