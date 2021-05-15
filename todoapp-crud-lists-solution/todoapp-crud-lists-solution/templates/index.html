@@ -67,7 +67,7 @@
           <li>
             <input data-id="{{ todo.id }}" class="todo-check-completed" type="checkbox" name="complete" id="complete" {% if todo.completed %} checked {%endif%} />
             {{ todo.description }}
-            <button class="delete-todo" data-id="{{ todo.id }}">&cross;</button>
+            <button id='delete-button' class="delete-todo" data-id="{{ todo.id }}">&cross;</button>
           </li>
           {% endfor %}
         </ul>
@@ -204,7 +204,7 @@
             const liItem = document.createElement('LI');
 
             liItem.innerHTML = jsonResponse['description'];
-            document.getElementById('todos').appendChild(liItem);
+            document.getElementById('description').append(liItem);
             document.getElementById('error').className = 'hidden';
             window.location.reload(true);
         })
@@ -213,7 +213,7 @@
         })
       }
 
-      document.getElementById('list-form').onsubmit = function (e) {
+      <!-- document.getElementById('list-form').onsubmit = function (e) {
         e.preventDefault();
 
         fetch('/lists/create', {
@@ -239,7 +239,7 @@
         .catch(function (err) {
             document.getElementById('error').className = '';
         })
-      }
+      } -->
 
 
     </script>
