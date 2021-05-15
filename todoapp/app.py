@@ -43,15 +43,21 @@ def create_todo():
         body['completed'] = todo.completed
         body['description'] = todo.description
         body['list_id'] = list_id
-    except():
+        print('worked')
+    except Exception as e:
+        print('exception')
+        print(e)
         db.session.rollback()
         error = True
         print(sys.exc_info())
     finally:
         db.session.close()
     if error:
+        print('error')
         abort(500)
     else:
+        print('not error')
+        print(body)
         return jsonify(body)
 
 @app.route('/todos/<todo_id>/set-completed', methods=['POST'])
@@ -62,7 +68,8 @@ def set_completed_todo(todo_id):
     todo = Todo.query.get(todo_id)
     todo.completed = completed
     db.session.commit()
-  except:
+  except Exception as e:
+    print(e)
     db.session.rollback()
   finally:
     db.session.close()
@@ -73,7 +80,8 @@ def delete_todo(todo_id):
   try:
     Todo.query.filter_by(id=todo_id).delete()
     db.session.commit()
-  except:
+  except Exception as e:
+    print(e)
     db.session.rollback()
   finally:
     db.session.close()
@@ -96,12 +104,35 @@ def set_completed_list(list_id):
     clicked_list = TodoList.query.get(list_id)
     clicked_list.completed = completed
     db.session.commit()
-  except:
+  except Exception as e:
+    print(e)
     db.session.rollback()
   finally:
     db.session.close()
   return redirect(url_for('index'))
 
+@app.route('/lists/create', methods=['POST'])
+def create_list():
+    error = False
+    body = {}
+    try:
+        name = request.get_json()['name']
+        todolist = TodoList(name=name)
+        db.session.add(todolist)
+        db.session.commit()
+        body['id'] = todolist.id
+        body['name'] = todolist.name
+    except Exception as e:
+        print(e)
+        db.session.rollback()
+        error = True
+        print(sys.exc_info)
+    finally:
+        db.session.close()
+    if error:
+        abort(500)
+    else:
+        return jsonify(body)
 
 
 @app.route('/')

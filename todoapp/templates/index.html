@@ -50,7 +50,7 @@
         <input id="todolist-input" type="text" name="todolist" />
         <input type="submit" value="Create List" />
       </form>
-      <div id="list-error" class="hidden">Something went wrong!</div>   
+      <div id="error" class="hidden">Something went wrong!</div>   
 
 
       <ul id="lists">
@@ -74,7 +74,7 @@
         <input id="description" type="text" name="description" />
         <input type="submit" value="Create Todo" />
       </form>
-      <div id="todo-error" class="hidden">Something went wrong!</div>   
+      <div id="error" class="hidden">Something went wrong!</div>   
       <h2>{{ active_list.name }}</h2>
 
       <ul id="todos">
@@ -105,9 +105,11 @@
             }
           })
           .then(function() {
+            console.log('hidden')
             document.getElementById('error').className = 'hidden';
           })
           .catch(function() {
+            console.log('not hidden')
             document.getElementById('error').className = '';
           })
         }
@@ -147,11 +149,11 @@
           li = document.createElement('li');
           li.innerText = desc;
           document.getElementById('todos').appendChild(li);
-          document.getElementById('todo-error').className = 'hidden';
+          document.getElementById('error').className = 'hidden';
           console.log(document.getElementById('todo-error').className)
         })
         .catch(function() {
-          document.getElementById('todo-error').className = '';
+          document.getElementById('error').className = '';
         })
       }
 
@@ -175,11 +177,11 @@
             console.log(jsonResponse)
             liItem.innerHTML = jsonResponse['name'];
             document.getElementById('lists').appendChild(liItem);
-            document.getElementById('list-error').className = 'hidden';
+            document.getElementById('error').className = 'hidden';
             window.location.reload(true);
         })
         .catch(function (err) {
-            document.getElementById('list-error').className = '';
+            document.getElementById('error').className = '';
         })
       }
 
