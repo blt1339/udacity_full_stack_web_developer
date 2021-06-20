@@ -83,6 +83,23 @@ def delete_todo(todo_id):
     db.session.close()
   return jsonify({ 'success': True })
 
+@app.route('/lists/<list_id>', methods=['DELETE'])
+def delete_list(list_id):
+  try:
+    list = TodoList.query.get(list_id)
+    for todo in list.todos:
+        db.session.delete(todo)
+
+    db.session.delete(list)
+    db.session.commit()
+  except Exception as e:
+    print(e)
+    db.session.rollback()
+  finally:
+    db.session.close()
+  return jsonify({ 'success': True })
+
+
 @app.route('/lists/<list_id>')
 def get_list_todos(list_id):
     lists = TodoList.query.all()
@@ -141,4 +158,4 @@ def create_list():
 
 @app.route('/')
 def index():
-    return redirect(url_for('get_list_todos', list_id=1))
+    return redirect(url_for('get_list_todos', list_id=1,code=200))

@@ -165,6 +165,7 @@ def delete_list(list_id):
     except():
         db.session.rollback()
         error = True
+        print(sys.exc_info())        
     finally:
         db.session.close()
     if error:
