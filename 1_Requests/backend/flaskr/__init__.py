@@ -93,11 +93,11 @@ def create_app(test_config=None):
   # TEST: When completed, you will be able to delete a single book by clicking on the trashcan.
   @app.route('/books/<int:book_id>', methods=['DELETE'])
   def delete_book(book_id):
-
+    print(book_id)
     book = Book.query.filter(Book.id == book_id).one_or_none()
 
     if book is None:
-      abort(404)
+      abort(422)
 
     try:
       book.delete()
@@ -156,7 +156,7 @@ def create_app(test_config=None):
     return jsonify({
         "success": False, 
         "error": 404,
-        "message": "Not found"
+        "message": "resource not found"
         }), 404
 
   @app.errorhandler(405)
@@ -164,15 +164,15 @@ def create_app(test_config=None):
     return jsonify({
         "success": False, 
         "error": 405,
-        "message": "Method Not Allowed"
-        }), 400
+        "message": "method not allowed"
+        }), 405
 
   @app.errorhandler(422)
   def unprocessable_entity(error): 
     return jsonify({
         "success": False, 
         "error": 422,
-        "message": "Unprocessable Entity"
+        "message": "unprocessable"
         }), 422
 
   return app
