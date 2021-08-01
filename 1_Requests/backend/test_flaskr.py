@@ -36,7 +36,7 @@ class BookTestCase(unittest.TestCase):
         self.assertTrue(len(data['books']))
     
     def test_404_sent_requesting_beyond_valid_page(self):
-        res = self.client().get('/books?page=1000', json={'rating': 1})
+        res = self.client().get('/books?page=1000')
         data = json.loads(res.data)
 
         self.assertEqual(res.status_code, 404)
